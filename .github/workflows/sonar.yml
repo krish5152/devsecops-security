@@ -12,6 +12,24 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: SonarQube Scan
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '11' # SonarQube requires Java 11 or higher
+
+    - name: Install SonarQube Scanner
       run: |
-        sonar-scanner -Dsonar.projectKey=my_project
+        curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
+        unzip sonar-scanner.zip
+        mv sonar-scanner-4.7.0.2747-linux sonar-scanner
+        echo "export PATH=$PATH:$PWD/sonar-scanner/bin" >> $GITHUB_ENV
+
+    - name: Run SonarQube Scan
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        sonar-scanner \
+          -Dsonar.projectKey=my_project \
+          -Dsonar.host.url=http://your-sonarqube-server \
+          -Dsonar.login=$SONAR_TOKEN
