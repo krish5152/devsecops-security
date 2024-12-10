@@ -31,5 +31,5 @@ jobs:
       run: |
         sonar-scanner \
           -Dsonar.projectKey=my_project \
-          -Dsonar.host.url=http://127.0.0.1:9000 \
+          -Dsonar.host.url=http://testing-son2.eastus.cloudapp.azure.com:9000 \
           -Dsonar.login=$SONAR_TOKEN
